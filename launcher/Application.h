@@ -310,6 +310,7 @@ class Application : public QApplication {
     bool m_offline = false;
     QString m_offlineName;
     bool m_liveCheck = false;
+    bool m_listAccounts = false;
     QList<QUrl> m_urlsToImport;
     QString m_instanceIdToShowWindowOf;
     std::unique_ptr<QFile> logFile;
