@@ -328,6 +328,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
 
     parser.addOptions(
         { { { "d", "dir" }, "Use a custom path as application root (use '.' for current directory)", "directory" },
+          { { "D", "get-directory" }, "Returns the application root path." },
           { { "l", "launch" }, "Launch the specified instance (by instance ID)", "instance" },
           { { "s", "server" }, "Join the specified server on launch (only valid in combination with --launch)", "address" },
           { { "w", "world" }, "Join the specified world on launch (only valid in combination with --launch)", "world" },
@@ -428,6 +429,16 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         }
 #endif
     }
+
+    QString getDataDir = parser.value("get-directory");
+    std::cout << "my parser value" << std::endl;
+    if (!getDataDir.isEmpty()) {
+        std::cout << "my if statement" << std::endl;
+        std::cout << dataPath.toStdString() << std::endl;
+        exit(EXIT_SUCCESS);
+    }
+    exit(111);  // temp
+    // im pretty sure this doesn't run on the main thread so we need to kill the program.
 
     if (!FS::ensureFolderPathExists(dataPath)) {
         showFatalErrorMessage(
