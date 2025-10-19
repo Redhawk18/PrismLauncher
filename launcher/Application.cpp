@@ -705,9 +705,12 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting("ConsoleMaxLines", 100000);
         m_settings->registerSetting("ConsoleOverflowStop", true);
 
-        logModel->setMaxLines(getConsoleMaxLines(settings()));
-        logModel->setStopOnOverflow(shouldStopOnConsoleOverflow(settings()));
-        logModel->setOverflowMessage(tr("Cannot display this log since the log length surpassed %1 lines.").arg(logModel->getMaxLines()));
+        if (condition) {
+            logModel->setMaxLines(getConsoleMaxLines(settings()));
+            logModel->setStopOnOverflow(shouldStopOnConsoleOverflow(settings()));
+            logModel->setOverflowMessage(
+                tr("Cannot display this log since the log length surpassed %1 lines.").arg(logModel->getMaxLines()));
+        }
 
         // Folders
         m_settings->registerSetting("InstanceDir", "instances");
