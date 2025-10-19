@@ -356,6 +356,11 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
     }
     m_liveCheck = parser.isSet("alive");
     m_listAccounts = parser.isSet("list-accounts");
+    if (parser.isSet("list-accounts")) {
+        QLoggingCategory::setFilterRules(
+            "*.debug=false\n"
+            "*.info=false");
+    }
 
     m_instanceIdToShowWindowOf = parser.value("show");
 
@@ -435,7 +440,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
     if (parser.isSet("get-directory")) {
         std::cout << dataPath.toStdString() << std::endl;
         // C function not Qt function - event loop not started yet
-        ::exit(0);
+        ::exit(EXIT_SUCCESS);
     }
 
     if (!FS::ensureFolderPathExists(dataPath)) {
@@ -1338,7 +1343,7 @@ void Application::performMainStartupAction()
             std::cout << accountNames.join(" ").toStdString() << std::endl;
         }
         m_status = Application::Succeeded;
-        exit(0);
+        exit(EXIT_SUCCESS);
         return;
     }
 
