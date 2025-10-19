@@ -356,11 +356,6 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
     }
     m_liveCheck = parser.isSet("alive");
     m_listAccounts = parser.isSet("list-accounts");
-    if (parser.isSet("list-accounts")) {
-        QLoggingCategory::setFilterRules(
-            "*.debug=false\n"
-            "*.info=false");
-    }
 
     m_instanceIdToShowWindowOf = parser.value("show");
 
@@ -526,7 +521,8 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
     }
 
     // init the logger
-    {
+    bool condition = !parser.isSet("list-accounts");  // For expandability.
+    if (condition) {
         static const QString baseLogFile = BuildConfig.LAUNCHER_NAME + "-%0.log";
         static const QString logBase = FS::PathCombine("logs", baseLogFile);
         if (FS::ensureFolderPathExists("logs")) {  // if this did not fail
@@ -604,7 +600,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         qInfo() << "<> Log initialized.";
     }
 
-    {
+    if (condition) {
         bool migrated = false;
 
         if (!migrated)
@@ -617,7 +613,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
                 "multimc.cfg");
     }
 
-    {
+    if (condition) {
         qInfo() << qPrintable(BuildConfig.LAUNCHER_DISPLAYNAME + ", " + QString(BuildConfig.LAUNCHER_COPYRIGHT).replace("\n", ", "));
         qInfo() << "Version                    : " << BuildConfig.printableVersionString();
         qInfo() << "Platform                   : " << BuildConfig.BUILD_PLATFORM;
